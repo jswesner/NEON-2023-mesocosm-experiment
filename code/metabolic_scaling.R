@@ -3,7 +3,7 @@ library(brms)
 library(tidybayes)
 library(ggridges)
 library(ggthemes)
-theme_set(theme_defa)
+theme_set(theme_default())
 
 # get data
 treatments = read_csv("data/treatments.csv") %>% 
