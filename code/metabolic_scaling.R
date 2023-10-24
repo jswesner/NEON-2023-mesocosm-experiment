@@ -1,3 +1,6 @@
+
+### This code equires an installation of rstan first. visit www.mc-stan.org first and follow instructions. Then install the packages below and 
+### run code.
 library(tidyverse)
 library(brms)
 library(tidybayes)
@@ -5,53 +8,11 @@ library(ggridges)
 library(ggthemes)
 theme_set(theme_default())
 
-# get data
-treatments = read_csv("data/treatments.csv") %>% 
-  mutate(treatment = paste0(heat, "_",fish))
-
-macro_lw_coeffs <- read_csv("C:/Users/Jeff.Wesner/OneDrive - The University of South Dakota/USD/Github Projects/neon_size_spectra/data/raw_data/inverts/macro_lw_coeffs.csv") %>% 
-  pivot_longer(cols = c(subphylum, class, order, family, genus, taxon),
-               names_to = "group",
-               values_to = "taxon") %>% 
-  glimpse() %>% 
-  group_by(taxon, formula) %>% 
-  reframe(a = mean(a),
-            b = mean(b)) %>% 
-  filter(formula == "M = aL^b") %>% 
-  bind_rows(tibble(taxon = "daphnia",   # from Sterner et al https://aslopubs.onlinelibrary.wiley.com/doi/pdf/10.4319/lo.1993.38.4.0857
-                   a = -2.7,
-                   b = 2.57)) %>% 
-  ungroup %>% 
-  mutate(taxon = tolower(taxon))
-
-metab = read_delim("data/gjoni_wesner_exp_2023.csv", 
-                   delim = ";", escape_double = FALSE, trim_ws = TRUE) %>%
-  separate(species, into = c("taxon", "stage")) %>% 
-  left_join(treatments) %>% 
-  left_join(macro_lw_coeffs) %>% 
-  ungroup %>% 
-  mutate(ww_mg = a*length^b,
-         dw_mg = ww_mg*0.2,
-         log_dw = log(dw_mg),
-         log_resp = log(resp_rate),
-         log_dw_c = log_dw - mean(log_dw),
-         log_resp_c = log_resp - mean(log_resp))
-
-write_csv(metab, file = "data/metabolism.csv")
-
-
-metab %>% 
-  ggplot(aes(x = log_dw_c, y = log_resp_c)) +
-  geom_point(aes(color = treatment)) +
-  geom_smooth(method = "lm", aes(fill = treatment)) 
-
-# model
+# 1) get data
 metab = read_csv(file = "data/metabolism.csv")
 
-get_prior(log_resp ~ log_dw*heat*fish,
-          data = metab,
-          family = gaussian())
 
+# 2) fit model
 brm_metab = brm(log_resp_c ~ log_dw_c*heat*fish + (1|tank),
                 data = metab,
                 prior = c(prior(normal(0.75, 0.2), coef = "log_dw_c"),
@@ -61,7 +22,8 @@ brm_metab = brm(log_resp_c ~ log_dw_c*heat*fish + (1|tank),
                 file_refit = "on_change",
                 cores = 4)
 
-# get metab slopes
+# 3) get metab slopes
+
 post_slopes = brm_metab$data %>% 
   distinct(heat, fish) %>% 
   mutate(tank = 1) %>% # placeholder. Value doesn't matter since re is not used to calculate slope
@@ -75,12 +37,7 @@ post_slopes = brm_metab$data %>%
                           TRUE ~ heat),
          heat = fct_relevel(heat, "not heated"))
 
-
-mean(post_slopes$slope)
-sd(post_slopes$slope)
-
-
-# plot
+# 4) plot model
 metab_slope_interaction = post_slopes %>% 
   ggplot(aes(y = slope, x = heat, color = fish)) + 
   stat_pointinterval(aes(color = fish)) +
@@ -91,6 +48,7 @@ metab_slope_interaction = post_slopes %>%
             alpha = 0.08,
             linewidth = 0.2)
 
+# save plot
 ggsave(metab_slope_interaction, file = "plots/metab_slope_interaction.jpg",
        dpi = 400, width = 6, height = 3)
 
