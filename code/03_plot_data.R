@@ -19,9 +19,18 @@ dw_raw %>%
 dw_fixed = dw_raw %>% 
   filter(length_mm <= 50) %>% 
   filter(length_mm > 0) %>% 
+  # group_by(tank) %>% 
+  mutate(xmin = min(dw_mg),
+         xmax = max(dw_mg)) %>% 
   write_csv(., file = "data/dw_fixed.csv")
 
 dw_fixed %>% 
-  ggplot(aes(x = tank, y = dw_mg, color = name)) +
-  geom_point() +
+  ggplot(aes(x = tank, y = dw_mg, color = treatment)) +
+  geom_jitter() +
   scale_y_log10()
+
+dw_fixed %>% 
+  ggplot(aes(x = length_mm)) +
+  geom_histogram() +
+  facet_wrap(~name) +
+  scale_x_log10()

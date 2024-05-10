@@ -44,3 +44,28 @@ fish_prey %>%
   ggplot(aes(x = tank, y = ppmr_raw, color = heat)) + 
   geom_jitter(width = 0.1) +
   scale_y_log10()
+
+
+fish_prey %>% 
+  group_by(treatment) %>% 
+  reframe(dm_mg = mean(dm_mg),
+          sd = sd(log10(dm_mg))) %>% 
+  arrange(treatment, -log10dm_mg)
+
+fish_prey %>% 
+  group_by(treatment) %>%
+  median_qi(dm_mg, .width = 0.5) %>% 
+  arrange(treatment, dm_mg)
+
+
+brm_fish_prey = brm(dm_mg ~ treatment,
+                    family = Gamma(),
+                    data = fish_prey)
+
+saveRDS(brm_fish_prey, file = "models/brm_fish_prey.rds")
+
+brm_fish_prey$data %>% 
+  distinct(treatment) %>% 
+  add_epred_draws(brm_fish_prey) %>% 
+  group_by(treatment) %>% 
+  median_qi(.epred)

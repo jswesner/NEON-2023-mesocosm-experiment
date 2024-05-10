@@ -13,14 +13,25 @@ metab = read_csv(file = "data/metabolism.csv")
 
 
 # 2) fit model
-brm_metab = brm(log_resp_c ~ log_dw_c*heat*fish + (1|tank),
-                data = metab,
-                prior = c(prior(normal(0.75, 0.2), coef = "log_dw_c"),
-                          prior(normal(0, 1), class = "b"),
-                          prior(normal(0, 0.2), class = "Intercept")),
-                file = "models/brm_metab.rds",
-                file_refit = "on_change",
-                cores = 4)
+# brm_metab = brm(log_resp_c ~ log_dw_c*heat*fish + (1|tank),
+#                 data = metab,
+#                 prior = c(prior(normal(0.75, 0.2), coef = "log_dw_c"),
+#                           prior(normal(0, 1), class = "b"),
+#                           prior(normal(0, 0.2), class = "Intercept")),
+#                 file = "models/brm_metab.rds",
+#                 file_refit = "on_change",
+#                 cores = 4)
+
+brm_metab = readRDS("models/brm_metab.rds")
+
+cond_plot = plot(conditional_effects(brm_metab, effect = "log_dw_c:fish", 
+                                conditions = tibble(heat = c("heated", "no heated"))))
+
+
+cond_plot$`log_dw_c:fish`$data %>% as_tibble() %>% 
+  ggplot(aes(x = log_dw_c, y = log_resp_c))
+
+
 
 # 3) get metab slopes
 
@@ -71,5 +82,7 @@ conditional_effects(brm_metab, effects = "log_dw_c", method = "predict",
 predicted_slopes %>% 
   reframe(mean = mean(slope),
           sd = sd(slope))
+
+
 
 

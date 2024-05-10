@@ -32,15 +32,23 @@ temperature <- read_csv("data/tank_temperature.csv") %>%
 site_coords = c(42.800489,-96.926772)
 
 # body size
-body_size_list <- import_list("data/body_size_data_summer_2023.xlsx", setclass = "tbl")
+# body_size_list <- import_list("data/body_size_data_summer_2023.xlsx", setclass = "tbl")
+# 
+# body_sizes = bind_rows(body_size_list[[1]], body_size_list[[2]]) %>% 
+#   mutate(date = "2023-06-21") %>% 
+  # mutate(taxon = case_when(grepl("chiro", taxon) ~ "chironomidae",
+  #                          grepl("cole", taxon) ~ "coleoptera",
+  #                          grepl("cerat", taxon) ~ "ceratopogonidae",
+  #                          TRUE ~ taxon)) %>%
+  # left_join(treatments) %>%
+  # filter(!is.na(length_mm))
 
-body_sizes = bind_rows(body_size_list[[1]], body_size_list[[2]]) %>% 
-  mutate(date = "2023-06-21") %>% 
+body_sizes = read_excel("data/experiment_dakota_02_04_2024_vg.xlsx") %>% 
   mutate(taxon = case_when(grepl("chiro", taxon) ~ "chironomidae",
                            grepl("cole", taxon) ~ "coleoptera",
                            grepl("cerat", taxon) ~ "ceratopogonidae",
-                           TRUE ~ taxon)) %>% 
-  left_join(treatments) %>% 
+                           TRUE ~ taxon)) %>%
+  left_join(treatments) %>%
   filter(!is.na(length_mm))
 
 write_csv(body_sizes, file = "data/body_sizes.csv")
