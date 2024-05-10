@@ -48,9 +48,9 @@ fish_prey %>%
 
 fish_prey %>% 
   group_by(treatment) %>% 
-  reframe(dm_mg = mean(dm_mg),
-          sd = sd(log10(dm_mg))) %>% 
-  arrange(treatment, -log10dm_mg)
+  reframe(dm_mg = median(dm_mg),
+          sd = sd(dm_mg)) %>% 
+  arrange(treatment, -dm_mg)
 
 fish_prey %>% 
   group_by(treatment) %>%
