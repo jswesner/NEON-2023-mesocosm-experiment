@@ -149,6 +149,8 @@ slope_posts = as_draws_df(fit_test_gamma) %>%
   mutate(heat = as.factor(heat),
          heat = fct_relevel(heat, "noheat", "heated"))
 
+saveRDS(slope_posts, file = "posteriors/scaling_posts.rds")
+
 exponent_posts = slope_posts %>% 
   ggplot(aes(x = heat, y = value, color = fish)) +
   stat_pointinterval() + 

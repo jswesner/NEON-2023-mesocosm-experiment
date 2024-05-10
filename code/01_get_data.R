@@ -3,6 +3,8 @@ library(rio)
 library(lubridate)
 library(ggthemes)
 library(janitor)
+library(ggview)
+library(ggspectra)
 # library(LakeMetabolizer)
 # library(streamMetabolizer)
 
@@ -54,32 +56,72 @@ body_sizes = read_excel("data/experiment_dakota_02_04_2024_vg.xlsx") %>%
 write_csv(body_sizes, file = "data/body_sizes.csv")
 
 # Plot temperature --------------------------------------------------------
-temp_plot = temperature %>% 
-  filter(date >= "2022-05-27") %>% 
-  ggplot(aes(x = date, y = temp_deg_c, color = treatment)) + 
+treatments = read_csv("data/treatments.csv") %>% 
+  mutate(treatment = paste0(heat, "_",fish))
+
+temperature <- read_csv("data/tank_temperature.csv") %>% 
+  clean_names() %>% 
+  mutate(date = dmy(date),
+         month = month(date)) %>% 
+  mutate(temp_deg_c = temperature_c) %>% 
+  left_join(treatments) 
+
+temp_plot = temperature %>%  
+  mutate(heat_label = case_when(heat == "heated" ~ "+heat",
+                                  TRUE ~ "-heat"),
+         heat_label = as.factor(heat_label),
+         heat_label = fct_relevel(heat_label, "+heat")) %>% 
+  ggplot(aes(x = date, y = temp_deg_c, color = heat_label)) + 
   geom_point(size = 0.3) + 
   geom_line(aes(group = tank), alpha = 0.5, linewidth = 0.2) +
-  scale_color_colorblind() + 
+  scale_color_brewer(type = "qual") + 
   theme_classic() + 
-  # scale_y_log10() +
+  labs(y = "Water temperature (\u00b0C)",
+       color = "") +
+  theme(legend.position = c(0.9, 0.5),
+        text = element_text(size = 9),
+        legend.text = element_text(size = 9),
+        axis.title.x = element_blank()) +
+  guides(color = guide_legend(override.aes = list(size = 2))) +
   NULL
 
-ggsave(temp_plot, file = "plots/temp_plot.jpg", width = 5, height = 3)
+ggview::ggview(temp_plot, width = 5, height = 4)
+ggsave(temp_plot, file = "plots/temp_plot.jpg", width = 5, height = 4)
+
+temperature %>% 
+  group_by(date, heat) %>% 
+  reframe(mean = mean(temp_deg_c)) %>% 
+  pivot_wider(names_from = heat, values_from = mean) %>% 
+  mutate(diff = heated - `no heated`) %>% 
+  ggplot(aes(x = date, y = diff)) + 
+  geom_point() +
+  geom_line() +
+  ylim(-10, 10) +
+  geom_hline(yintercept = 0) +
+  stat_label_peaks(aes(label = after_stat(y.label)),
+                   span = 2,
+                   position = position_nudge(y = 0.5),
+                   color = "black") +
+  stat_label_valleys(aes(label = after_stat(y.label)),
+                   span = 2,
+                   position = position_nudge(y = -0.5),
+                   color = "black")
+
+temperature %>% 
+  group_by(date, heat) %>% 
+  reframe(mean = mean(temp_deg_c)) %>% 
+  pivot_wider(names_from = heat, values_from = mean) %>% 
+  mutate(diff = heated - `no heated`) %>% 
+  reframe(mean = mean(diff),
+          sd = sd(diff))
 
 
-
-# Plot O2_temp ------------------------------------------------------------
-library(ggthemes)
-library(viridis)
-temperature %>%
-  clean_names() %>% 
-  filter(!is.na(o2_do_mg_l)) %>% 
-  ggplot(aes(y = o2_do_mg_l, x = date_time)) +
-  geom_point(aes(color = treatment)) + 
-  geom_line(aes(group = tank, color = treatment)) +
-  facet_wrap(~treatment)
-  
-
+temperature %>% 
+  mutate(yday = yday(date)/min(yday(date))) %>% 
+  mutate(week = week(date)/min(week(date))) %>% 
+  filter(week == min(week) | week == max(week)) %>%
+  group_by(week, heat) %>% 
+  reframe(mean = mean(temp_deg_c))
 
 
 metab = read_delim("data/gjoni_wesner_exp_2023.csv", 

@@ -35,6 +35,8 @@ fish_prey = read_csv("data/prey_size_data.csv") %>%
          ppmr_raw = fish_dw_mg/dm_mg,
          ppmr_log = round(log10(ppmr_raw)))
 
+
+
 fish_prey %>% 
   group_by(tank) %>% 
   reframe(median = median(ppmr_raw)) %>% 
