@@ -29,3 +29,12 @@ lambdas = brm_isd_rand$data %>%
   add_epred_draws(brm_isd_rand, re_formula = NA)
 
 saveRDS(lambdas, file = "posteriors/lambdas.rds")
+
+dw_nodragons = dw %>% filter(correct_taxon != "Odonata")
+
+brm_isd_rand_nodragons = update(brm_isd_rand, newdata = dw_nodragons, 
+                                iter = 1000, chains = 1)
+
+saveRDS(brm_isd_rand_nodragons, file = "models/brm_isd_rand_nodragons.rds")
+
+
