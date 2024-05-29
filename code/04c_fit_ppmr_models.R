@@ -1,4 +1,7 @@
 library(tidyverse)
+library(tidybayes)
+library(ggthemes)
+library(brms)
 
 treatments = read_csv("data/treatments.csv") %>% 
   mutate(treatment = paste0(heat, "_",fish))
@@ -18,9 +21,10 @@ fish_ppmr = read_csv("data/prey_size_data.csv") %>%
 
 
 fish_ppmr %>% 
-  ggplot(aes(x = tank, y = ppmr_s,
+  ggplot(aes(x = tank, y = ppmr_raw,
              color = interaction(heat, fish))) + 
-  geom_point() 
+  geom_point() +
+  scale_y_log10()
 
 # brm_ppmr = brm(ppmr_s ~ heat + (1|tank),
 #                data = fish_ppmr,
@@ -42,4 +46,29 @@ ppmr_posts = fish_ppmr %>%
 
 saveRDS(ppmr_posts, file = "posteriors/ppmr_posts.rds")
 
+ppmr_posts %>% 
+  ggplot(aes(x = .epred)) +
+  geom_density() +
+  geom_point(data = fish_ppmr, aes(x = ppmr_raw, y = 0),
+             shape = "|") +
+  scale_x_log10()
+
+ppmr_plot = ppmr_posts %>% 
+  ggplot(aes(x = heat, y = .epred, color = heat)) +
+  stat_pointinterval() +
+  scale_y_continuous(label = scales::scientific) +
+  geom_point(data = fish_ppmr %>% group_by(tank, heat) %>% reframe(.epred = mean(ppmr_raw))) +
+  scale_color_colorblind() +
+  geom_line(data = . %>% filter(.draw <= 500),
+            aes(group = .draw), alpha = 0.02) +
+  theme_default() +
+  labs(y = "PPMR")
+
+ggsave(ppmr_plot, file = "plots/ppmr_plot.jpg", width = 6, height = 5, dpi = 500)
+
+
+ppmr_posts %>% 
+  pivot_wider(names_from = heat, values_from = .epred) %>% 
+  mutate(diff = heated - `no heated`) %>% 
+  reframe(prob = sum(diff > 0)/max(.draw)) 
 
