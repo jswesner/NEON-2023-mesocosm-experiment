@@ -3,7 +3,7 @@ library(brms)
 library(tidybayes)
 library(ggridges)
 library(ggthemes)
-theme_set(theme_defa)
+theme_set(theme_default())
 
 # get data
 treatments = read_csv("data/treatments.csv") %>% 
@@ -52,14 +52,16 @@ get_prior(log_resp ~ log_dw*heat*fish,
           data = metab,
           family = gaussian())
 
-brm_metab = brm(log_resp_c ~ log_dw_c*heat*fish + (1|tank),
-                data = metab,
-                prior = c(prior(normal(0.75, 0.2), coef = "log_dw_c"),
-                          prior(normal(0, 1), class = "b"),
-                          prior(normal(0, 0.2), class = "Intercept")),
-                file = "models/brm_metab.rds",
-                file_refit = "on_change",
-                cores = 4)
+# brm_metab = brm(log_resp_c ~ log_dw_c*heat*fish + (1|tank),
+#                 data = metab,
+#                 prior = c(prior(normal(0.75, 0.2), coef = "log_dw_c"),
+#                           prior(normal(0, 1), class = "b"),
+#                           prior(normal(0, 0.2), class = "Intercept")),
+#                 file = "models/brm_metab.rds",
+#                 file_refit = "on_change",
+#                 cores = 4)
+
+brm_metab = readRDS("models/brm_metab.rds")
 
 # get metab slopes
 post_slopes = brm_metab$data %>% 
@@ -114,4 +116,42 @@ predicted_slopes %>%
   reframe(mean = mean(slope),
           sd = sd(slope))
 
+# tank slopes -------------------------------------------------------------
+
+# brm_metab_tankslopes = update(brm_metab, formula = . ~ log_dw_c*heat*fish + (1 + log_dw_c|tank),
+#                               newdata = metab)
+# 
+# saveRDS(brm_metab_tankslopes, file = "models/brm_metab_tankslopes.rds")
+brm_metab_tankslopes = readRDS(file = "models/brm_metab_tankslopes.rds")
+
+
+post_tank_slopes = brm_metab_tankslopes$data %>% 
+  distinct(tank, heat, fish) %>% 
+  expand_grid(log_dw_c = c(0, 1)) %>% 
+  add_epred_draws(brm_metab_tankslopes, re_formula = NULL) %>% 
+  ungroup %>% 
+  select(-.row, -.chain, -.iteration) %>% 
+  pivot_wider(names_from = log_dw_c, values_from = .epred) %>% 
+  mutate(slope = `1` - `0`)
+
+tank_slopes = post_tank_slopes %>% 
+  group_by(tank, heat, fish) %>% 
+  median_qi(slope) %>% 
+  mutate(model = "metabolic scaling slopes")
+  
+write_csv(tank_slopes, file = "tables/tank_slopes.csv")
+
+posts_tankslopes = brm_metab_tankslopes$data %>% 
+  distinct(tank, heat, fish) %>% 
+  expand_grid(log_dw_c = seq(min(brm_metab_tankslopes$data$log_dw_c),
+                             max(brm_metab_tankslopes$data$log_dw_c),
+                             length.out = 30)) %>% 
+  add_epred_draws(brm_metab_tankslopes, re_formula = NULL,
+                  ndraws = 500)
+
+posts_tankslopes %>% 
+  ggplot(aes(x = log_dw_c, y = .epred)) + 
+  stat_lineribbon(aes(group = tank, fill = heat), .width = 0.95, alpha = 0.4) +
+  facet_wrap(~tank) +
+  geom_point(data = metab, aes(y = log_resp_c), size = 0.2)
 
