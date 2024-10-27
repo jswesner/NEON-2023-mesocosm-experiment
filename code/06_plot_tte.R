@@ -3,136 +3,64 @@ library(brms)
 library(isdbayes)
 library(tidybayes)
 
-# load posteriors
-lambda = readRDS(file = "posteriors/lambdas.rds") %>%  
-  mutate(heat= case_when(heat == "heated" ~ "heat",
-                                TRUE ~ "noheat")) %>% 
-  mutate(lambda = .epred) %>% 
-  ungroup %>% 
-  select(heat, fish, .draw, lambda, .epred) %>% 
-  mutate(metric = "lambda")
+nsims = 10
 
-ppmr = readRDS("posteriors/ppmr_posts.rds") %>%  
-  mutate(heat = case_when(heat == "heated" ~ "heat",
-                                TRUE ~ "noheat")) %>% 
-  mutate(ppmr = .epred) %>% 
-  ungroup %>% 
-  select(heat, .draw, fish, ppmr, .epred) %>% 
-  mutate(metric = "ppmr")
+library(viridis)
 
-gamma = readRDS(file = "posteriors/scaling_posts.rds") %>% select(heat, fish, .draw, value) %>%  
-  mutate(heat = case_when(heat == "heated" ~ "heat",
-                                TRUE ~ "noheat")) %>% 
-  mutate(gamma = value,
-         .epred = gamma) %>% 
-  mutate(metric = "gamma")
+sim_te = tibble(lambda = seq(-3, -1, length.out = 30)) %>% 
+  expand_grid(log10ppmr = seq(log10(1e2), log10(1e6), length.out = nsims)) %>% 
+  # expand_grid(te = seq(0.01, 1, length.out = nsims)) %>% 
+  expand_grid(gamma = c(0.3, 0.75, 1)) %>% 
+  # mutate(log10ppmr = log10(ppmr)) %>% 
+  mutate(log10te = (lambda + gamma + 1)*log10ppmr,
+         # log10te_subsidy = 10^((lambda + gamma + 1 - subsidy)*log10ppmr),
+         te = 10^log10te,
+         ppmr = 10^log10ppmr) %>% 
+  mutate(theoretical_te = case_when(te >= 0.05 & te <= 0.4 ~ "in", TRUE ~ "out")) %>% 
+  mutate(gamma_labeled = paste0("\u03b3 = ", gamma))
 
-tte = lambda %>% select(-.epred, -metric) %>% 
-  left_join(gamma %>% select(-.epred, -metric)) %>% 
-  right_join(ppmr %>% select(-.epred, -metric)) %>% 
-  mutate(subsidy = 0.4) %>% 
-  mutate(te = (ppmr*1)^(lambda + 1 + gamma),
-         te_theoretical_ppmr_scaling = 1e4^(lambda + 1 + 0.75)) %>% 
-  select(-value)
+label_lambdas = tibble(gamma_labeled = paste0("\u03b3 = ", 0.3),
+                       te = min(sim_te$te),
+                       lambda = -2.1,
+                       label = "Empirical \u03bb's -->")
 
+label_tte = tibble(gamma_labeled = paste0("\u03b3 = ", 0.3),
+                   te = 0.115,
+                   lambda = -2.5,
+                   label = "Plausible TTE's")
 
-tte %>% 
-  ggplot(aes(x = te, fill = heat)) + 
-  stat_halfeye() +
-  scale_x_log10() + 
-  geom_vline(xintercept = 0.1)
-
-tte %>% 
-  pivot_longer(cols = starts_with("te")) %>% 
-  ggplot(aes(x = value, fill = heat, alpha = name)) + 
-  stat_halfeye() +
-  scale_x_log10() + 
-  scale_alpha_manual(values = c(0.4, 1)) +
-  geom_vline(xintercept = 0.1) 
-
-posts_stacked = bind_rows(gammas, ppmr, gamma) %>% 
-  select(-gamma, -ppmr, -value, -gamma)
-
-gamma_posts = posts_stacked %>% 
-  filter(fish == "fish") %>% 
-  filter(metric == "gamma") %>% 
-  ggplot(aes(x = .epred, fill = heat)) + 
-  stat_halfeye() +
-  labs(x = "gamma") +
-  geom_vline(xintercept = 0.75)
-
-ppmr_posts = posts_stacked %>% 
-  filter(metric == "ppmr") %>% 
-  ggplot(aes(x = .epred, fill = heat)) + 
-  stat_halfeye() +
-  labs(x = "ppmr") +
-  geom_vline(xintercept = 1e5)
-
-lambda_posts = posts_stacked %>% 
-  filter(metric == "lambda") %>% 
-  ggplot(aes(x = .epred, fill = heat)) + 
-  stat_halfeye() +
-  labs(x = "lambda") +
-  geom_vline(xintercept = -1.95)
-
-library(patchwork)
-
-gamma_posts/ppmr_posts/lambda_posts
-
-
-
-# Check ISD's with sizeSpectra --------
-
-
-library(sizeSpectra)
-
-dw <- read_csv("data/dw_fixed.csv") %>% 
-  mutate(tank = as.integer(tank),
-         tank_f = as.factor(tank))
-
-dw_single = dw %>% filter(tank == 24)
-
-eight.results = eightMethodsMEE(dw_single$dw_mg, num.bins = 12, b.only = F)
-
-eight.results$hLBmiz.list$slope
-eight.results$hMLE.list$b
-
-MLE.plot(dw_single$dw_mg,
-         b = eight.results$hMLE.list$b,
-         # b = -1.13,
-         log="xy")
-
-
-
-brm_isd_rand$data %>% 
-  distinct(xmin, xmax, tank_f, heat, fish) %>% 
-  mutate(tank = parse_number(as.character(tank_f)),
-         counts = 1) %>% 
-  add_epred_draws(brm_isd_rand, re_formula = NULL) %>% 
+post_medians = read_rds("posteriors/post_dots.rds") %>% 
   group_by(tank) %>% 
-  median_qi(.epred) %>% 
-  print(n = Inf)
+  median_qi(.epred)
 
-brm_isd_rand$data  %>% 
-  mutate(tank = parse_number(as.character(tank_f))) %>% 
-  group_by(tank) %>% 
-  arrange(-dw_mg) %>% 
-  mutate(order = row_number()) %>% 
-  filter(tank == 12) %>% 
-  ggplot(aes(x = dw_mg, y = order)) + 
-  geom_point(shape = 1) +
-  scale_x_log10() +
-  scale_y_log10() +
-  theme_base()
+simulated_tte_plot = sim_te %>% 
+  ggplot(aes(x = lambda, y = te)) + 
+  geom_point(aes(alpha = theoretical_te, color = log10ppmr), size = 0.4) +
+  # geom_line(aes(group = ppmr), alpha = 0.4) +
+  scale_y_log10(breaks = c(0.0001,0.01, 0.05, 0.4, 1, 100, 10000, 1e6, 1e10),
+                labels = c("0.0001","0.01", "0.05", "0.4", "1", "100", "10,000", "1,000,000", "10,000,000,000")) +
+  facet_wrap(~gamma_labeled) +
+  scale_alpha_manual(values = c(1, 0.1)) +
+  geom_hline(yintercept = c(0.05, 0.4), linetype = "dashed", linewidth = 0.3) +
+  brms::theme_default() +
+  scale_color_viridis(labels = c("10e2", "10e3", "10e4", "10e5", "10e6")) +
+  # geom_vline(xintercept = rnorm(500, -1.2, 0.1),
+             # alpha = 0.007) +
+  geom_vline(data = post_medians, aes(xintercept = .epred), alpha = 0.1) +
+  labs(y = "Trophic Transfer Efficiency",
+       x = "\u03bb (ISD exponent)",
+       color = "PPMR",
+       caption = "Figure X. Simulation study of trophic transfer efficiency under different scenarios of PPMR, metabolic scaling (\u03b3), and ISD exponenents (\u03bb).
+       Vertical gray lines indicate the empirical lambda measured in each mesocosm tank.") +
+  guides(alpha = "none") +
+  geom_text(data = label_lambdas, aes(label = label), size = 2) +
+  geom_text(data = label_tte, aes(label = label), size = 2) +
+  theme(legend.text = element_text(size = 7),
+        text = element_text(size = 9),
+        legend.position = c(0.05, 0.85),
+        # legend.key.width=unit(3,"cm"),
+        legend.key.size = unit(0.2, "cm"))
 
-
-
-x = dw_single$dw_mg
-plot(sort(x, decreasing=TRUE),
-       1:length(x),
-       log = "xy",
-       xlab = expression(paste("Values, ", italic(x))),
-       ylab = expression( paste("Number of ", values >= x), sep=""))
-
-
-         
+# ggview::ggview(simulated_tte_plot, width = 6.5, height = 3.5)
+ggsave(simulated_tte_plot, width = 6.5, height = 3.5,
+       file = "plots/simulated_tte_plot.jpg", dpi = 400)
