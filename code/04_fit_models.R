@@ -20,10 +20,7 @@ fit_isd = readRDS("models/fit_isd.rds")
 #               prior = c(prior(normal(-1.25, 0.2), class = "Intercept"),
 #                         prior(normal(0, 0.1), class = "b")))
 
-fit_isd = update(fit_isd, newdata = dw, formula = . ~ heat*fish + (1|tank),
-                 prior = c(prior(normal(-1.6, 0.2), class = 'Intercept'),
-                           prior(normal(0, 0.1), class = "b")),
-                 iter = 1000, chains = 1)
+fit_isd = update(fit_isd, newdata = dw)
 
 saveRDS(fit_isd, file = "models/fit_isd.rds")
 

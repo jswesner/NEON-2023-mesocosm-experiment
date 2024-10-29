@@ -14,7 +14,9 @@ dw_raw = lengths_fixed %>%
   ungroup %>% 
   mutate(xmin = min(dw_mg),
          xmax = max(dw_mg),
-         counts = 1)
+         counts = 1) %>% 
+  filter(dw_mg > 0,
+         length_mm <2000) # removes obvious typo in lengths
   
 write_csv(dw_raw, file = "data/dw_raw.csv")
 

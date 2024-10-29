@@ -871,7 +871,6 @@ tank,date,taxon,individual,length_mm,name,measure,heat,fish,treatment,correct_ta
 17,2023-06-21,chironomidae,9,7.048,aria,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0.23043402911506836,0,8947489.927280568,1
 17,2023-06-21,chironomidae,10,10.682,aria,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0.715975453173977,0,8947489.927280568,1
 17,2023-06-21,chironomidae,11,13.52,aria,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,1.3610516558694352,0,8947489.927280568,1
-17,2023-06-21,chironomidae,12,4282,aria,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,8947489.927280568,0,8947489.927280568,1
 17,2023-06-21,chironomidae,13,18.973,aria,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,3.4283864105084554,0,8947489.927280568,1
 17,2023-06-21,chironomidae,14,9.079,aria,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0.4595942677526798,0,8947489.927280568,1
 17,2023-06-21,chironomidae,15,4.29,aria,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0.05952663291641098,0,8947489.927280568,1
@@ -2156,11 +2155,9 @@ tank,date,taxon,individual,length_mm,name,measure,heat,fish,treatment,correct_ta
 19,2023-06-21,chironomidae,297,0.573,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,2.460438519911673e-4,0,8947489.927280568,1
 19,2023-06-21,chironomidae,298,1.904,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.006499257028580867,0,8947489.927280568,1
 19,2023-06-21,chironomidae,299,1.965,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.007082774669474707,0,8947489.927280568,1
-19,2023-06-21,chironomidae,300,0,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0,0,8947489.927280568,1
 19,2023-06-21,chironomidae,301,5.081,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.09442340147892338,0,8947489.927280568,1
 19,2023-06-21,chironomidae,302,5.508,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.11765912418859788,0,8947489.927280568,1
 19,2023-06-21,chironomidae,303,2.784,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.018311585431673574,0,8947489.927280568,1
-19,2023-06-21,chironomidae,304,0,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0,0,8947489.927280568,1
 19,2023-06-21,chironomidae,305,2.213,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.009793480956968394,0,8947489.927280568,1
 19,2023-06-21,chironomidae,306,4.651,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.07419559062110485,0,8947489.927280568,1
 19,2023-06-21,chironomidae,307,4.874,Trevor,isd,heated,fish,heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.084300636013359,0,8947489.927280568,1
@@ -2301,7 +2298,6 @@ tank,date,taxon,individual,length_mm,name,measure,heat,fish,treatment,correct_ta
 20,2023-06-21,chironomidae,54,1,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.001123,0,8947489.927280568,1
 20,2023-06-21,chironomidae,55,2.12,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.008711678657825619,0,8947489.927280568,1
 20,2023-06-21,chironomidae,56,2.202,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.009661329252909584,0,8947489.927280568,1
-20,2023-06-21,chironomidae,57,0,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0,0,8947489.927280568,1
 20,2023-06-21,chironomidae,58,1.198,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.001837741509702721,0,8947489.927280568,1
 20,2023-06-21,chironomidae,59,1.598,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.00403098772409266,0,8947489.927280568,1
 20,2023-06-21,chironomidae,60,2.127,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.008790327194538856,0,8947489.927280568,1
@@ -2368,7 +2364,6 @@ tank,date,taxon,individual,length_mm,name,measure,heat,fish,treatment,correct_ta
 20,2023-06-21,chironomidae,121,2.387,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.01203806243481572,0,8947489.927280568,1
 20,2023-06-21,chironomidae,122,2.191,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.00953031234654545,0,8947489.927280568,1
 20,2023-06-21,chironomidae,123,1.238,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.0020098947784388454,0,8947489.927280568,1
-20,2023-06-21,chironomidae,124,0,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0,0,8947489.927280568,1
 20,2023-06-21,chironomidae,125,2.13,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.00882417082826984,0,8947489.927280568,1
 20,2023-06-21,chironomidae,126,1.513,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.003472902649875218,0,8947489.927280568,1
 20,2023-06-21,chironomidae,127,2.665,Trevor,isd,no heated,fish,no heated_fish,Chironomidae,M = aL^b,0.001123,2.7264,0.016255511466576444,0,8947489.927280568,1
@@ -2842,7 +2837,6 @@ tank,date,taxon,individual,length_mm,name,measure,heat,fish,treatment,correct_ta
 21,2023-06-21,chironomidae,229,2.113,Trevor,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0.008633477172171045,0,8947489.927280568,1
 21,2023-06-21,chironomidae,230,3.398,Trevor,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0.03152877988788349,0,8947489.927280568,1
 21,2023-06-21,chironomidae,231,0.771,Trevor,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,5.526431770515474e-4,0,8947489.927280568,1
-21,2023-06-21,chironomidae,232,0,Trevor,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0,0,8947489.927280568,1
 21,2023-06-21,chironomidae,233,1.793,Trevor,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0.005517483686032883,0,8947489.927280568,1
 21,2023-06-21,chironomidae,234,2.176,Trevor,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0.009353474288366593,0,8947489.927280568,1
 21,2023-06-21,chironomidae,235,5.463,Trevor,isd,heated,no fish,heated_no fish,Chironomidae,M = aL^b,0.001123,2.7264,0.11505677092073933,0,8947489.927280568,1
