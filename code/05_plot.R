@@ -74,6 +74,8 @@ metab_isd = bind_rows(metab_wrangled,
          fish = case_when(fish == "fish" ~ "Fish",
                           TRUE ~ "No Fish"))
 
+saveRDS(metab_isd, file = "posteriors/metab_isd_posteriors.rds")
+
 lambda_plot = metab_isd %>% 
   filter(grepl("a)", measure)) %>% 
   ggplot(aes(x = heat, y = value, fill = fish, alpha = heat)) + 
@@ -106,3 +108,13 @@ scaling_plot = metab_isd %>%
 library(patchwork)
 lambda_scaling_plot = lambda_plot/scaling_plot
 ggsave(lambda_scaling_plot, file = "plots/lambda_scaling_plot.jpg", width = 5, height = 6, dpi = 400)
+
+
+# summarize ---------------------------------------------------------------
+
+summary_values = metab_isd %>% 
+  group_by(heat, fish, measure) %>% 
+  median_qi(value) %>% 
+  arrange(measure)
+
+write_csv(summary_values, file = "tables/summary_values.csv")
