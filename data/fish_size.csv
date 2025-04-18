@@ -1,0 +1,25 @@
+date,tank,original_tl,correction,tl_cm,area_m2,a,b,notes,tl_mm,ww_g,dw_g,heat,fish,treatment
+5/15/2023,1,8.3,1,8.3,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,83,8.905331022230222,1.7810662044460444,heated,fish,heated_fish
+5/15/2023,4,11.5,1,11.5,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,115,25.283271069740668,5.056654213948134,heated,fish,heated_fish
+5/15/2023,5,9.9,1,9.9,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,99,15.654269075399263,3.1308538150798526,no heated,fish,no heated_fish
+5/15/2023,7,10.1,1,10.1,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,101,16.6889328746056,3.3377865749211204,no heated,fish,no heated_fish
+5/15/2023,9,8.9,1,8.9,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,89,11.133922475437876,2.2267844950875753,heated,fish,heated_fish
+5/15/2023,11,9.2,1,9.2,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,92,12.380016379092787,2.4760032758185577,no heated,fish,no heated_fish
+5/15/2023,14,9.3,1,9.3,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,93,12.815796630809402,2.5631593261618804,no heated,fish,no heated_fish
+5/15/2023,15,8.8,1,8.8,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,88,10.738527227879171,2.147705445575834,heated,fish,heated_fish
+5/15/2023,18,9,1,9,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,90,11.539213318519836,2.3078426637039673,heated,fish,heated_fish
+5/15/2023,19,8.5,1,8.5,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,85,9.610383845614736,1.9220767691229472,heated,fish,heated_fish
+5/15/2023,20,8.7,1,8.7,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,87,10.352894303013048,2.07057886060261,no heated,fish,no heated_fish
+5/15/2023,24,8.9,1,8.9,2.8,0.0102,3.2,fish measured on 2023-05-15; parameters a and b are mean of NEON for LEPCYA,89,11.133922475437876,2.2267844950875753,no heated,fish,no heated_fish
+6/19/2023,1,8.9,1.3,11.57,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",115.7,25.779050685862888,5.155810137172578,heated,fish,heated_fish
+6/19/2023,4,NA,1.3,11.6,2.8,0.0102,3.2,"measured directly with ruler. Fish was mangled in collection, but measurement was still possible",116,25.993558446482606,5.1987116892965215,heated,fish,heated_fish
+6/19/2023,5,8.8,1.3,11.44,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",114.39999999999999,24.86356792134288,4.972713584268576,no heated,fish,no heated_fish
+6/19/2023,7,9.7,1.3,12.61,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",126.1,33.95380489563056,6.790760979126112,no heated,fish,no heated_fish
+6/19/2023,9,8.6,1.3,11.18,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",111.8,23.100104423938273,4.620020884787655,heated,fish,heated_fish
+6/19/2023,11,9.4,1.3,12.22,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",122.2,30.706338322119997,6.141267664423999,no heated,fish,no heated_fish
+6/19/2023,14,8.9,1.3,11.57,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",115.7,25.779050685862888,5.155810137172578,no heated,fish,no heated_fish
+6/19/2023,15,8.5,1.3,11.05,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",110.5,22.251508649646567,4.450301729929314,heated,fish,heated_fish
+6/19/2023,18,9,1.3,11.7,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",117,26.717445327048406,5.343489065409681,heated,fish,heated_fish
+6/19/2023,19,7.9,1.3,10.27,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",102.69999999999999,17.604576874377397,3.5209153748754796,heated,fish,heated_fish
+6/19/2023,20,7.8,1.3,10.14,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",101.4,16.901359042805144,3.380271808561029,no heated,fish,no heated_fish
+6/19/2023,24,7.6,1.3,9.88,2.8,0.0102,3.2,"scale was rite in the rain paper line widths, which are 1.3 mm wide (2 lines). So the correction is the imageJ length*1.3",98.80000000000001,15.553294465822747,3.1106588931645494,no heated,fish,no heated_fish
