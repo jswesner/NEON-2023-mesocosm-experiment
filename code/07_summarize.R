@@ -14,3 +14,9 @@ tank_lambdas = post_dots %>%
   median_qi(.epred)
 
 write_csv(tank_lambdas, file = "tables/tank_lambdas.csv")
+
+
+#iter = 4000, 
+#chains = 4,
+#threads = 12,
+#cores = 32)

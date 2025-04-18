@@ -82,7 +82,7 @@ lambda_plot = metab_isd %>%
   stat_halfeye(size = 0.2) +
   facet_wrap(~fish) +
   labs(y = "\u03bb",
-       subtitle = "a)") +
+       subtitle = "b)") +
   theme(axis.title.x = element_blank()) +
   coord_cartesian(ylim = c(-2.5, -1)) +
   scale_fill_colorblind() +
@@ -97,7 +97,7 @@ scaling_plot = metab_isd %>%
   stat_halfeye(size = 0.2) +
   facet_wrap(~fish) +
   labs(y = "Metabolic Scaling Slope",
-       subtitle = "b)") +
+       subtitle = "a)") +
   theme(axis.title.x = element_blank()) +
   scale_fill_colorblind() +
   scale_alpha_discrete(range = c(0.2, 0.8)) +
@@ -106,7 +106,7 @@ scaling_plot = metab_isd %>%
 
 
 library(patchwork)
-lambda_scaling_plot = lambda_plot/scaling_plot
+lambda_scaling_plot = scaling_plot/lambda_plot
 ggsave(lambda_scaling_plot, file = "plots/lambda_scaling_plot.jpg", width = 5, height = 6, dpi = 400)
 
 
@@ -118,3 +118,17 @@ summary_values = metab_isd %>%
   arrange(measure)
 
 write_csv(summary_values, file = "tables/summary_values.csv")
+
+
+# probabilities
+metab_isd %>% 
+  pivot_wider(names_from = heat, values_from = value) %>% 
+  mutate(diff = Ambient - Heated) %>% 
+  group_by(fish, measure) %>% 
+  median_qi()
+
+metab_isd %>% 
+  pivot_wider(names_from = heat, values_from = value) %>% 
+  mutate(diff = Ambient - Heated) %>% 
+  group_by(fish, measure) %>% 
+  reframe(prob = sum(diff>0)/max(.draw))

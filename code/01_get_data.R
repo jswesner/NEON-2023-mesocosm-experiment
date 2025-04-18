@@ -5,6 +5,7 @@ library(ggthemes)
 library(janitor)
 # library(LakeMetabolizer)
 # library(streamMetabolizer)
+theme_set(theme_default())
 
 # length-weight equations
 macro_lw_coeffs <- read_csv("C:/Users/Jeff.Wesner/OneDrive - The University of South Dakota/USD/Github Projects/neon_size_spectra/data/raw_data/inverts/macro_lw_coeffs.csv") %>% 
@@ -45,18 +46,6 @@ body_sizes = bind_rows(body_size_list[[1]], body_size_list[[2]]) %>%
 
 write_csv(body_sizes, file = "data/body_sizes.csv")
 
-# Plot temperature --------------------------------------------------------
-temp_plot = temperature %>% 
-  filter(date >= "2022-05-27") %>% 
-  ggplot(aes(x = date, y = temp_deg_c, color = treatment)) + 
-  geom_point(size = 0.3) + 
-  geom_line(aes(group = tank), alpha = 0.5, linewidth = 0.2) +
-  scale_color_colorblind() + 
-  theme_classic() + 
-  # scale_y_log10() +
-  NULL
-
-ggsave(temp_plot, file = "plots/temp_plot.jpg", width = 5, height = 3)
 
 
 
@@ -71,9 +60,6 @@ temperature %>%
   geom_line(aes(group = tank, color = treatment)) +
   facet_wrap(~treatment)
   
-
-
-
 metab = read_delim("data/gjoni_wesner_exp_2023.csv", 
                    delim = ";", escape_double = FALSE, trim_ws = TRUE)
 

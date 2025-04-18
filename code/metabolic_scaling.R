@@ -78,9 +78,6 @@ post_slopes = brm_metab$data %>%
          heat = fct_relevel(heat, "not heated"))
 
 
-mean(post_slopes$slope)
-sd(post_slopes$slope)
-
 
 # plot
 metab_slope_interaction = post_slopes %>% 
@@ -95,6 +92,9 @@ metab_slope_interaction = post_slopes %>%
 
 ggsave(metab_slope_interaction, file = "plots/metab_slope_interaction.jpg",
        dpi = 400, width = 6, height = 3)
+
+
+# treatment comparison ----------------------------------------------------
 
 
 # mean predicted slope ----------------------------------------------------
