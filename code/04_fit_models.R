@@ -24,38 +24,3 @@ fit_isd = update(fit_isd, newdata = dw)
 
 saveRDS(fit_isd, file = "models/fit_isd.rds")
 
-# check model -------------------------------------------------------------
-
-post_dots  = dw %>% 
-  select(heat, fish, tank, xmin, xmax) %>% 
-  mutate(counts = 1) %>% 
-  add_epred_draws(fit_isd)
-
-post_dots %>% 
-  group_by(fish, tank, .draw) %>% 
-  reframe(.epred = mean(.epred)) %>% 
-  ggplot(aes(x = fish, y = .epred)) + 
-  stat_pointinterval(aes(group = tank), 
-                     position = position_jitter(width = 0.1))
-
-post_predicts = dw %>% 
-  # slice(1:10) %>% 
-  add_predicted_draws(fit_isd, ndraws = 500)
-
-post_predicts %>% 
-  filter(.draw <= 10) %>% 
-  ggplot(aes(x = .prediction)) + 
-  geom_density(aes(group = .draw)) +
-  scale_x_log10() +
-  facet_wrap(~tank, scales = "free") +
-  geom_density(data = dw, aes(x = dw_mg), color = "dodgerblue")
-
-post_predicts %>% 
-  group_by(.draw) %>% 
-  reframe(median = median(.prediction),
-          gm = exp(mean(log(.prediction)))) %>% 
-  ggplot(aes(x = median)) + 
-  geom_histogram() + 
-  geom_vline(data = dw %>% ungroup %>% reframe(median = median(dw_mg),
-                                                   gm = exp(mean(log(dw_mg)))),
-             aes(xintercept = median))
