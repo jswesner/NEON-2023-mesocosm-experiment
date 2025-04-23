@@ -49,9 +49,7 @@ simulated_tte_plot = sim_te %>%
   geom_vline(data = post_medians, aes(xintercept = .epred), alpha = 0.1) +
   labs(y = "Trophic Transfer Efficiency",
        x = "\u03bb (ISD exponent)",
-       color = "PPMR",
-       caption = "Figure X. Simulation study of trophic transfer efficiency under different scenarios of PPMR, metabolic scaling (\u03b3), and ISD exponenents (\u03bb).
-       Vertical gray lines indicate the empirical lambda measured in each mesocosm tank.") +
+       color = "PPMR") +
   guides(alpha = "none") +
   geom_text(data = label_lambdas, aes(label = label), size = 2) +
   geom_text(data = label_tte, aes(label = label), size = 2) +
