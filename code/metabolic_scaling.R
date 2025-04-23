@@ -62,6 +62,9 @@ get_prior(log_resp ~ log_dw*heat*fish,
 #                 cores = 4)
 
 brm_metab = readRDS("models/brm_metab.rds")
+brm_metab_randslope = update(brm_metab, formula = . ~ log_dw_c*heat*fish + (1 + log_dw_c|tank) )
+
+saveRDS(brm_metab_randslope, file = "models/brm_metab_randslope.rds")
 
 # get metab slopes
 post_slopes = brm_metab$data %>% 
