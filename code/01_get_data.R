@@ -21,7 +21,17 @@ macro_lw_coeffs <- read_csv("C:/Users/Jeff.Wesner/OneDrive - The University of S
                    b = 2.57))
 
 treatments = read_csv("data/treatments.csv") %>% 
-  mutate(treatment = paste0(heat, "_",fish))
+  mutate(treatment = paste0(heat, "_",fish)) %>% 
+  mutate(treatment = case_when(heat == "heated" & fish == "fish" ~ "+heat|+fish",
+                               heat == "no heated" & fish == "fish" ~ "-heat|+fish",
+                               heat == "heated" & fish != "fish" ~ "+heat|-fish",
+                               TRUE ~ "-heat|-fish"),
+         fish_plus = case_when(fish == "fish" ~ "+fish",
+                               TRUE ~ "-fish"),
+         heat_plus = case_when(heat == "heated" ~ "+heat",
+                               TRUE ~ "-heat"))
+
+write_csv(treatments, file = "data/treatments.csv")
 
 temperature <- read_csv("data/tank_temperature.csv") %>% 
   clean_names() %>% 

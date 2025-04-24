@@ -1,0 +1,9 @@
+heat,fish,measure,value,.lower,.upper,.width,.point,.interval
+Ambient,Fish,a) ISD λ,-1.629816098,-1.857022337,-1.428553461,0.95,median,qi
+Ambient,No Fish,a) ISD λ,-1.610025116,-1.86765796,-1.373829109,0.95,median,qi
+Heated,Fish,a) ISD λ,-1.587798171,-1.815338725,-1.398525982,0.95,median,qi
+Heated,No Fish,a) ISD λ,-1.559507772,-1.844947094,-1.361210518,0.95,median,qi
+Ambient,Fish,b) Metabolic Scaling Slope,0.464034685,0.397465902,0.533072167,0.95,median,qi
+Ambient,No Fish,b) Metabolic Scaling Slope,0.311993748,0.247215488,0.378545568,0.95,median,qi
+Heated,Fish,b) Metabolic Scaling Slope,0.350407867,0.280641593,0.42125532,0.95,median,qi
+Heated,No Fish,b) Metabolic Scaling Slope,0.446874045,0.387556462,0.510775899,0.95,median,qi

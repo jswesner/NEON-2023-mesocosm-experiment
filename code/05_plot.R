@@ -5,6 +5,9 @@ library(isdbayes)
 library(ggthemes)
 theme_set(theme_default())
 
+
+treatments = read_csv("data/treatments.csv") 
+
 fit_isd = readRDS(file = "models/fit_isd.rds")
 dat = fit_isd$data
 
@@ -42,7 +45,7 @@ ggsave(plot_2023, file = "plots/plot_2023.jpg", width = 6.5, height = 5)
 
 # metabolic scaling -------------------------------------------------------
 
-brm_metab = readRDS("models/brm_metab.rds")
+brm_metab = readRDS("models/brm_metab_randslope.rds")
 
 metab_posts = brm_metab$data %>% 
   distinct(heat, fish) %>%
@@ -69,38 +72,37 @@ isd_wrangled = post_lines %>%
 
 metab_isd = bind_rows(metab_wrangled,
                       isd_wrangled) %>% 
-  mutate(heat = case_when(heat == "heated" ~ "Heated",
-                          TRUE ~ "Ambient"),
-         fish = case_when(fish == "fish" ~ "Fish",
-                          TRUE ~ "No Fish"))
+  left_join(treatments %>% distinct(fish, heat, fish_plus, heat_plus, treatment))
 
 saveRDS(metab_isd, file = "posteriors/metab_isd_posteriors.rds")
 
 lambda_plot = metab_isd %>% 
   filter(grepl("a)", measure)) %>% 
-  ggplot(aes(x = heat, y = value, fill = fish, alpha = heat)) + 
+  ggplot(aes(x = heat_plus, y = value, fill = treatment)) + 
   stat_halfeye(size = 0.2) +
-  facet_wrap(~fish) +
+  facet_wrap(~fish_plus) +
   labs(y = "\u03bb",
        subtitle = "b)") +
   theme(axis.title.x = element_blank()) +
   coord_cartesian(ylim = c(-2.5, -1)) +
-  scale_fill_colorblind() +
-  scale_alpha_discrete(range = c(0.2, 0.8)) +
+  # scale_fill_colorblind() +
+  scale_fill_viridis_d() +
+  # scale_alpha_discrete(range = c(0.2, 0.8)) +
   guides(fill = "none",
          alpha = "none")
 
 
 scaling_plot = metab_isd %>% 
   filter(!grepl("a)", measure)) %>% 
-  ggplot(aes(x = heat, y = value, fill = fish, alpha = heat)) + 
+  ggplot(aes(x = heat_plus, y = value, fill = treatment)) + 
   stat_halfeye(size = 0.2) +
-  facet_wrap(~fish) +
+  facet_wrap(~fish_plus) +
   labs(y = "Metabolic Scaling Slope",
        subtitle = "a)") +
   theme(axis.title.x = element_blank()) +
-  scale_fill_colorblind() +
-  scale_alpha_discrete(range = c(0.2, 0.8)) +
+  # scale_fill_colorblind() +
+  scale_fill_viridis_d() +
+  # scale_alpha_discrete(range = c(0.2, 0.8)) +
   guides(fill = "none",
          alpha = "none")
 

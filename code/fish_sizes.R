@@ -1,7 +1,7 @@
 library(tidyverse)
 
 treatments = read_csv("data/treatments.csv") %>% 
-  mutate(treatment = paste0(heat, "_",fish))
+  mutate(treatment = paste0(heat_plus, "|",fish_plus))
 
 fish_lengths <- read_csv("data/fish_lengths.csv") %>% 
   mutate(tl_mm = tl_cm*10,
@@ -9,13 +9,11 @@ fish_lengths <- read_csv("data/fish_lengths.csv") %>%
          dw_g = ww_g*0.2) %>% 
   left_join(treatments)
 
-
 fish_lengths %>% 
   filter(tank != 4) %>% # fish 4 could not be measured accurately at the end due to being mangled in the valve during collection 
   ggplot(aes(x = date, y = dw_g, color = heat)) + 
   geom_point() + 
   geom_line(aes(group = tank, color = heat)) 
-
 
 fish_lengths %>% 
   select(tank, date, dw_g, heat) %>% 
@@ -25,6 +23,14 @@ fish_lengths %>%
   # geom_boxplot(aes(group = heat)) + 
   geom_point()
 
+fish_growth = fish_lengths %>% 
+  mutate(date = mdy(date)) %>% 
+  select(treatment, date, dw_g, tank) %>% 
+  pivot_wider(names_from = date, values_from = dw_g) %>% 
+  mutate(growth = `2023-06-19` - `2023-05-15`) %>% 
+  arrange(treatment, tank)
+
+write_csv(fish_growth, file = "tables/fish_growth.csv")
 
 
 # fish prey ---------------------------------------------------------------
