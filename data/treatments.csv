@@ -1,25 +1,25 @@
-tank,heat,fish
-1,heated,fish
-2,no heated,no fish
-3,heated,no fish
-4,heated,fish
-5,no heated,fish
-6,no heated,no fish
-7,no heated,fish
-8,no heated,no fish
-9,heated,fish
-10,heated,no fish
-11,no heated,fish
-12,heated,no fish
-13,no heated,no fish
-14,no heated,fish
-15,heated,fish
-16,no heated,no fish
-17,heated,no fish
-18,heated,fish
-19,heated,fish
-20,no heated,fish
-21,heated,no fish
-22,no heated,no fish
-23,heated,no fish
-24,no heated,fish
+tank,heat,fish,treatment,fish_plus,heat_plus
+1,heated,fish,+heat|+fish,+fish,+heat
+2,no heated,no fish,-heat|-fish,-fish,-heat
+3,heated,no fish,+heat|-fish,-fish,+heat
+4,heated,fish,+heat|+fish,+fish,+heat
+5,no heated,fish,-heat|+fish,+fish,-heat
+6,no heated,no fish,-heat|-fish,-fish,-heat
+7,no heated,fish,-heat|+fish,+fish,-heat
+8,no heated,no fish,-heat|-fish,-fish,-heat
+9,heated,fish,+heat|+fish,+fish,+heat
+10,heated,no fish,+heat|-fish,-fish,+heat
+11,no heated,fish,-heat|+fish,+fish,-heat
+12,heated,no fish,+heat|-fish,-fish,+heat
+13,no heated,no fish,-heat|-fish,-fish,-heat
+14,no heated,fish,-heat|+fish,+fish,-heat
+15,heated,fish,+heat|+fish,+fish,+heat
+16,no heated,no fish,-heat|-fish,-fish,-heat
+17,heated,no fish,+heat|-fish,-fish,+heat
+18,heated,fish,+heat|+fish,+fish,+heat
+19,heated,fish,+heat|+fish,+fish,+heat
+20,no heated,fish,-heat|+fish,+fish,-heat
+21,heated,no fish,+heat|-fish,-fish,+heat
+22,no heated,no fish,-heat|-fish,-fish,-heat
+23,heated,no fish,+heat|-fish,-fish,+heat
+24,no heated,fish,-heat|+fish,+fish,-heat

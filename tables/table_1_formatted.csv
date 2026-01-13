@@ -1,0 +1,10 @@
+Table 1. Median and 95% credible intervals for the metabolic scaling slope b and the size-abundance parameter ? estimated from the individual size distribution (ISD). ,,,,,
+Heated,Fish,Response,Median,Low95,High95
+Ambient,Fish,Metabolic Scaling Slope b,0.46,0.40,0.53
+Ambient,No Fish,Metabolic Scaling Slope b,0.31,0.25,0.38
+Heated,Fish,Metabolic Scaling Slope b,0.35,0.28,0.42
+Heated,No Fish,Metabolic Scaling Slope b,0.45,0.39,0.51
+Ambient,Fish,ISD ?,-1.63,-1.86,-1.43
+Ambient,No Fish,ISD ?,-1.61,-1.87,-1.37
+Heated,Fish,ISD ?,-1.59,-1.82,-1.40
+Heated,No Fish,ISD ?,-1.56,-1.84,-1.36

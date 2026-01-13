@@ -9,7 +9,7 @@ theme_set(theme_default())
 treatments = read_csv("data/treatments.csv") %>% 
   mutate(treatment = paste0(heat, "_",fish))
 
-macro_lw_coeffs <- read_csv("C:/Users/Jeff.Wesner/OneDrive - The University of South Dakota/USD/Github Projects/neon_size_spectra/data/raw_data/inverts/macro_lw_coeffs.csv") %>% 
+macro_lw_coeffs <- read_csv("data/macro_lw_coeffs.csv") %>% 
   pivot_longer(cols = c(subphylum, class, order, family, genus, taxon),
                names_to = "group",
                values_to = "taxon") %>% 
@@ -43,7 +43,8 @@ write_csv(metab, file = "data/metabolism.csv")
 metab %>% 
   ggplot(aes(x = log_dw_c, y = log_resp_c)) +
   geom_point(aes(color = treatment)) +
-  geom_smooth(method = "lm", aes(fill = treatment)) 
+  geom_smooth(method = "lm", aes(fill = treatment)) +
+  facet_wrap(~taxon)
 
 # model
 metab = read_csv(file = "data/metabolism.csv")
@@ -62,9 +63,6 @@ get_prior(log_resp ~ log_dw*heat*fish,
 #                 cores = 4)
 
 brm_metab = readRDS("models/brm_metab.rds")
-brm_metab_randslope = update(brm_metab, formula = . ~ log_dw_c*heat*fish + (1 + log_dw_c|tank) )
-
-saveRDS(brm_metab_randslope, file = "models/brm_metab_randslope.rds")
 
 # get metab slopes
 post_slopes = brm_metab$data %>% 
@@ -97,8 +95,11 @@ ggsave(metab_slope_interaction, file = "plots/metab_slope_interaction.jpg",
        dpi = 400, width = 6, height = 3)
 
 
-# treatment comparison ----------------------------------------------------
+# taxon comparison ----------------------------------------------------
+brm_metab_taxon = update(brm_metab, formula = . ~ log_dw_c * heat * fish + (1 | tank) + (log_dw_c * heat * fish|taxon),
+                         chains = 1, iter = 1000, newdata = metab)
 
+saveRDS(brm_metab_taxon, file = "models/brm_metab_taxon.rds")
 
 # mean predicted slope ----------------------------------------------------
 
@@ -157,4 +158,75 @@ posts_tankslopes %>%
   stat_lineribbon(aes(group = tank, fill = heat), .width = 0.95, alpha = 0.4) +
   facet_wrap(~tank) +
   geom_point(data = metab, aes(y = log_resp_c), size = 0.2)
+
+
+
+# taxon comparison ----------------------------------------------------
+brm_metab_taxon = update(brm_metab, formula = . ~ log_dw_c * heat * fish + (1 | tank) + (log_dw_c * heat * fish|taxon),
+                         chains = 1, iter = 1000, newdata = metab)
+
+saveRDS(brm_metab_taxon, file = "models/brm_metab_taxon.rds")
+
+# mean predicted slope 
+
+predicted_slopes_taxa = brm_metab_taxon$data %>% 
+  distinct(heat, fish) %>% 
+  mutate(tank = 1) %>% # placeholder. Value doesn't matter since re is not used to calculate slope
+  expand_grid(log_dw_c = c(0,1)) %>% 
+  add_epred_draws(brm_metab_taxon, re_formula = NA) %>% 
+  ungroup %>% 
+  select(heat, fish, .epred, .draw, log_dw_c) %>% 
+  pivot_wider(names_from = log_dw_c, values_from = .epred) %>% 
+  mutate(slope = `1` - `0`)
+
+
+predicted_slopes_taxa %>% 
+  group_by(heat, fish) %>% 
+  median_qi(slope)
+
+# chiros only
+# taxon comparison ----------------------------------------------------
+brm_metab_chiros = update(brm_metab, formula = . ~ log_dw_c * heat * fish + (1 | tank),
+                         chains = 1, iter = 1000, newdata = metab %>% filter(taxon == "chironomidae"))
+
+saveRDS(brm_metab_chiros, file = "models/brm_metab_chiros.rds")
+
+# mean predicted slope 
+
+predicted_slopes_chiros = brm_metab_chiros$data %>% 
+  distinct(heat, fish) %>% 
+  mutate(tank = 1) %>% # placeholder. Value doesn't matter since re is not used to calculate slope
+  expand_grid(log_dw_c = c(0,1)) %>% 
+  add_epred_draws(brm_metab_chiros, re_formula = NA) %>% 
+  ungroup %>% 
+  select(heat, fish, .epred, .draw, log_dw_c) %>% 
+  pivot_wider(names_from = log_dw_c, values_from = .epred) %>% 
+  mutate(slope = `1` - `0`)
+
+
+chiro_slopes = predicted_slopes_chiros %>% 
+  group_by(heat, fish) %>% 
+  median_qi(slope) %>% 
+  mutate(heat = case_when(heat == "no heated" ~ "not heated",
+                           TRUE ~ heat))
+
+overall_slopes = post_slopes %>% 
+  group_by(heat, fish) %>% 
+  median_qi(slope) %>% 
+  rename(slope_overall = slope,
+         .lower_overall = .lower,
+         .upper_overall = .upper)
+  
+
+compare_chiro_slopes = chiro_slopes %>% left_join(overall_slopes) %>% 
+  ggplot(aes(x = slope, y = slope_overall)) +
+  geom_point() +
+  geom_linerange(aes(xmin = .lower, xmax = .upper)) +
+  geom_linerange(aes(ymin = .lower_overall, ymax = .upper_overall)) +
+  geom_abline(linetype = "dotted") +
+  labs(y = "b slope (chironomids only)",
+       x = "b slope (all insects)")
+
+ggsave(compare_chiro_slopes, file = "plots/compare_chiro_slopes.jpg", width = 5, height = 5)  
+  
 
