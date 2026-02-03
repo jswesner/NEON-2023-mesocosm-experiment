@@ -4,15 +4,17 @@ library(brms)
 library(isdbayes)
 # model isd ---------------------------------------------------------------
 
-dw = readRDS("data/dat_clauset_xmins.rds") %>% 
+dw_culled = readRDS("data/dat_clauset_xmins.rds") %>% 
   group_by(tank) %>% 
   mutate(xmin = min(dw_mg),
          xmax = max(dw_mg))
 
+write_csv(dw_culled, file = "data/dw_culled.csv")
+
 fit_isd = readRDS("models/fit_isd.rds")
 
 # fit_isd = brm(dw_mg| vreal(counts, xmin, xmax) ~ heat*fish,
-#               data = dw,
+#               data = dw_culled,
 #               stanvars = stanvars,  # new thing added by the package
 #               family = paretocounts(), # new thing added by the package
 #               chains = 1, iter = 1000,
@@ -23,4 +25,6 @@ fit_isd = readRDS("models/fit_isd.rds")
 fit_isd = update(fit_isd, newdata = dw)
 
 saveRDS(fit_isd, file = "models/fit_isd.rds")
+
+
 

@@ -41,6 +41,7 @@ write_csv(metab, file = "data/metabolism.csv")
 
 
 metab %>% 
+  # filter(length >= 2.5) %>% 
   ggplot(aes(x = log_dw_c, y = log_resp_c)) +
   geom_point(aes(color = treatment)) +
   geom_smooth(method = "lm", aes(fill = treatment)) +

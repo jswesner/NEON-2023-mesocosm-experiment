@@ -24,7 +24,7 @@ write_csv(tank_lambdas, file = "tables/tank_lambdas.csv")
 
 # summarize taxa ------
 # ISD
-dw <- read_csv("data/dw_fixed.csv") %>% 
+dw = read_csv("data/dw_fixed.csv") %>% 
   mutate(tank = as.integer(tank),
          tank_f = as.factor(tank),
          type = "ISD")

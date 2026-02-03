@@ -7,7 +7,8 @@ library(tidyverse)
 # 1) load data
 dat_all = read_csv(file = "data/dw_raw.csv")
 
-# 2) resample (only needed if no_m2 is variable)
+
+# 2) resample (only needed if no_m2 is variable) *not needed for this data set
 # dat = dat_all %>% 
 #   group_by(tank) %>% 
 #   sample_n(5000, weight = counts, replace = T)
